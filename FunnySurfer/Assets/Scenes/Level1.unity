@@ -6420,7 +6420,7 @@ GameObject:
   - component: {fileID: 1222301319}
   - component: {fileID: 1222301318}
   m_Layer: 6
-  m_Name: Particle System
+  m_Name: SnowParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6603,9 +6603,9 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 5
-      minScalar: 5
+      minMaxState: 3
+      scalar: 15
+      minScalar: 10
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -17934,6 +17934,7 @@ MonoBehaviour:
   torqueAmount: 20
   boostSpeed: 22
   baseSpeed: 15
+  isOnGround: 0
 --- !u!58 &2109816582
 CircleCollider2D:
   m_ObjectHideFlags: 0
