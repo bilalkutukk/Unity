@@ -3,6 +3,7 @@ using System.Data.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,7 +15,12 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb2D;
     Vector2 moveVector;
     SurfaceEffector2D surfaceEffector2D;
+    ScoreManager scoreManager;
     public bool isOnGround = false;
+    float previousRotation = 0f;
+    float totalRotation = 0f;
+    int flipCount = 0;
+
 
     void Start()
     {
@@ -22,6 +28,7 @@ public class PlayerController : MonoBehaviour
         moveAction = InputSystem.actions.FindAction("Move");
         rb2D = GetComponent<Rigidbody2D>();
         surfaceEffector2D = FindFirstObjectByType<SurfaceEffector2D>();
+        scoreManager = FindFirstObjectByType<ScoreManager>();
     }
 
     void Update()
@@ -30,6 +37,7 @@ public class PlayerController : MonoBehaviour
         {
             rotatePlayer();
             boostPlayer();
+            calculateFlips();
         }
     }
 
@@ -61,5 +69,38 @@ public class PlayerController : MonoBehaviour
     void enableControls()
     {
         isOnGround = false;
+    }
+
+    void calculateFlips()
+    {
+        float currentRotation = transform.rotation.eulerAngles.z;
+
+        totalRotation += Mathf.DeltaAngle(previousRotation, currentRotation);
+
+        if (Mathf.Abs(totalRotation) >= 340f)
+        {
+            flipCount++;
+            totalRotation = 0f;
+            Debug.Log("Flips: " + flipCount);
+            scoreManager.addScore(100);
+        }
+
+        previousRotation = currentRotation;
+    }
+    
+    public void activatePowerup(PowerupSO powerup)
+    {
+        switch (powerup.GetPowerupType)
+        {
+            case "speed":
+                baseSpeed += powerup.GetValueChange;
+                boostSpeed += powerup.GetValueChange;
+                break;
+            case "torque":
+                torqueAmount += powerup.GetValueChange;
+                break;
+            default:
+                break;
+        }
     }
 }
